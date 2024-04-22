@@ -45,6 +45,19 @@ def clientes_vendedor(conn, id_vendedor) -> List[db.connection.RowType]:
     return consulta_generica(conn, f'SELECT * FROM clientes WHERE id_vendedor={id_vendedor}')
     
 def consulta_generica(conn : db.MySQLConnection, consulta : str) -> List[db.connection.RowType]:
+    """Hace una consulta la base de datos
+
+    Args:
+        conn (MySQLConnection): Conexión a la base de datos obtenida por abrir_conexion()
+        consulta (str): Consulta en SQL para hacer en la BD
+
+    Returns:
+        List[RowType]: Una lista de tuplas donde cada tupla es un registro y 
+                        cada elemento de la tupla es un campo del registro.
+    """
+    cursor = conn.cursor(buffered=True)
+    cursor.execute(consulta)
+    return cursor.fetchall()
 
 if __name__ == "__main__":
     dbconn = abrir_conexion()
