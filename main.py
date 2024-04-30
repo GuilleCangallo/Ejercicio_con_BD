@@ -48,7 +48,7 @@ def listar_todos_vendedores(conn):
     vendedores = consulta_generica(conn, 'SELECT * FROM vendedores')
     return vendedores
 
-def listar_todos_clientes(conn):
+def listar_todos_clientes_con_vendedor(conn):
     consulta = '''
         SELECT clientes.id, clientes.nombre, vendedores.nombre 
         FROM clientes 
@@ -56,6 +56,17 @@ def listar_todos_clientes(conn):
     '''
     clientes = consulta_generica(conn, consulta)
     return clientes
+
+def listar_ordenes_de_vendedor(conn, id_vendedor):
+    consulta = f'''
+        SELECT ordenes.id, clientes.nombre, vendedores.nombre, ordenes.valor, vendedores.comision 
+        FROM ordenes 
+        INNER JOIN clientes ON ordenes.cliente_id = clientes.id
+        INNER JOIN vendedores ON ordenes.vendedor_id = vendedores.id
+        WHERE ordenes.vendedor_id = {id_vendedor}
+    '''
+    ordenes = consulta_generica(conn, consulta)
+    return ordenes
 
 if __name__ == "__main__":
     dbconn = abrir_conexion()
