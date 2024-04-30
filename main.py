@@ -68,6 +68,36 @@ def listar_ordenes_de_vendedor(conn, id_vendedor):
     ordenes = consulta_generica(conn, consulta)
     return ordenes
 
+def crear_orden_compra(conn, vendedor_id, cliente_id, fecha, valor, descripcion):
+    cursor = conn.cursor(dictionary=True)
+    
+    consulta_cliente = f"SELECT clientes.sector FROM ventas.clientes WHERE clientes.id = {cliente_id}"
+    sector_cliente = consulta_generica(conn, consulta_cliente)
+    consulta_vendedor = f"SELECT vendedores.sector FROM ventas.vendedores WHERE vendedores.id = {vendedor_id}"
+    sector_vendedor = consulta_generica(conn, consulta_vendedor)
+    
+    if sector_cliente['sector'] != sector_vendedor['sector']:
+        raise ValueError("Error, no coinciden los sectores.")
+    if valor < 0:
+        raise ValueError("Error, no puede ser negativo.")
+    
+    cursor.execute(f'''
+        INSERT INTO ordenes (vendedor_id, cliente_id, valor, fecha, descripcion)
+        VALUES ({vendedor_id}, {cliente_id}, {valor}, {fecha}, "{descripcion}")
+    ''')
+    
+    conn.commit()
+    cursor.close()
+    
+def dar_alta_vendedor(conn, nombre, sector, comision, telefono):
+    cursor = conn.cursor()
+    cursor.execute(f'''
+        INSERT INTO vendedores (nombre, sector, comision, telefono)
+        VALUES ("{nombre}", "{sector}", {comision}, {telefono})
+    ''')
+    conn.commit()
+    cursor.close()
+
 if __name__ == "__main__":
     dbconn = abrir_conexion()
     dbconn.close()
