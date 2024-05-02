@@ -1,9 +1,3 @@
-"""
-    Test unitarios para cada función del main
-
-    Prof. Tute Ávalos
-"""
-# pylint: disable=missing-function-docstring
 import pytest
 import main
 from constantes import DB_TABLES
@@ -131,3 +125,25 @@ def test_crear_orden_compra_correcta():
 @pytest.mark.usefixtures("conn_fixture")   
 def test_dar_alta_vendedor():
     main.dar_alta_vendedor(pytest.dbconn, "Carlos", "construccion", 34, 5763871)
+
+@pytest.mark.usefixtures("conn_fixture")     
+def test_dar_alta_cliente_sector_incorrecto():
+    with pytest.raises(ValueError) as excinfo:
+        main.dar_alta_cliente(pytest.dbconn, "Pedro", "Rosario", "construccion", 6488743, "pepe@gmail.mp", 1)
+    assert "no es igual a" in str(excinfo.value)
+    
+@pytest.mark.usefixtures("conn_fixture")
+def test_dar_alta_cliente_correcto():
+    main.dar_alta_cliente(pytest.dbconn, "Pedro", "Rosario", "construccion", 6488743, "pepe@gmail.mp", 4)
+    
+@pytest.mark.usefixtures("conn_fixture")
+def test_eliminar_orden_compra():
+    main.eliminar_orden_de_compra(pytest.dbconn, 16)
+    
+@pytest.mark.usefixtures("conn_fixture")
+def test_dar_baja_vendedor():
+    main.dar_baja_vendedor(pytest.dbconn, 22)
+    
+@pytest.mark.usefixtures("conn_fixture")
+def test_dar_baja_cliente():
+    main.dar_baja_cliente(pytest.dbconn, 32)
