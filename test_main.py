@@ -40,6 +40,22 @@ def test_dar_alta_vendedor_existe():
     main_attrs = dir(main)
     assert 'dar_alta_vendedor' in main_attrs
 
+def test_dar_alta_cliente_existe():
+    main_attrs = dir(main)
+    assert 'dar_alta_cliente' in main_attrs
+    
+def test_eliminar_orden_de_compra_existe():
+    main_attrs = dir(main)
+    assert 'eliminar_orden_de_compra' in main_attrs
+    
+def test_dar_baja_vendedor_existe():
+    main_attrs = dir(main)
+    assert 'dar_baja_vendedor' in main_attrs
+    
+def test_dar_baja_cliente_existe():
+    main_attrs = dir(main)
+    assert 'dar_baja_cliente' in main_attrs   
+
 @pytest.fixture
 def conn_fixture():
     pytest.dbconn = main.abrir_conexion()
@@ -58,6 +74,22 @@ def test_chequear_tabla(tabla):
     assert len(resultado) == 1
     
 @pytest.mark.usefixtures("conn_fixture")
-def test_listar_clientes_vendor():
+def test_listar_clientes_vendedor():
     clientes = main.clientes_vendedor(pytest.dbconn, 2)
     assert clientes[0][0] == 1
+
+@pytest.mark.usefixtures("conn_fixture")
+def test_listar_todos_vendedores():
+    vendedores = main.listar_todos_vendedores(pytest.dbconn)
+    assert vendedores != 0
+    
+@pytest.mark.usefixtures("conn_fixture")
+def test_listar_todos_clientes_con_vendedor():
+    clientes = main.listar_todos_clientes_con_vendedor(pytest.dbconn)
+    assert clientes != 0
+    
+@pytest.mark.usefixtures("conn_fixture")
+def test_listar_ordenes_de_vendedor():
+    id_vendedor = 1
+    ordenes_de_vendedor = main.listar_ordenes_de_vendedor(pytest.dbconn, id_vendedor)
+    assert ordenes_de_vendedor != 0
