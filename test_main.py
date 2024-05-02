@@ -147,3 +147,7 @@ def test_dar_baja_vendedor():
 @pytest.mark.usefixtures("conn_fixture")
 def test_dar_baja_cliente():
     main.dar_baja_cliente(pytest.dbconn, 32)
+
+def pytest_sessionfinish(session, status):
+    # pylint: disable=unused-argument
+    pytest.dbconn.close()
