@@ -1,13 +1,6 @@
-"""
-    Ejemplo de TDD con conexión a base de datos
-
-    Prof. Tute Ávalos
-"""
 from typing import List
 import mysql.connector as db
-#import constantes
 from constantes import DB_HOSTNAME,DB_DATABASE,DB_PASSWORD,DB_USERNAME
-
 
 def abrir_conexion() -> db.pooling.PooledMySQLConnection | db.MySQLConnection:
     """Abre una conexión con la base de datos
