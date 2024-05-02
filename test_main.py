@@ -93,3 +93,41 @@ def test_listar_ordenes_de_vendedor():
     id_vendedor = 1
     ordenes_de_vendedor = main.listar_ordenes_de_vendedor(pytest.dbconn, id_vendedor)
     assert ordenes_de_vendedor != 0
+
+@pytest.mark.usefixtures("conn_fixture")
+def test_crear_orden_compra_monto_negativo():
+    vendedores_id = 4
+    cliente_id = 4
+    valor = -345
+    fecha = "2018-12-09"
+    descripcion = "yuscgbuyer"
+    
+    with pytest.raises(ValueError) as excinfo:
+        main.crear_orden_compra(pytest.dbconn, vendedores_id, cliente_id, valor, fecha, descripcion)
+    assert "negativo" in str(excinfo.value)
+
+@pytest.mark.usefixtures("conn_fixture")
+def test_crear_orden_compra_sector_incorrecto():
+    vendedores_id = 5
+    cliente_id = 2
+    valor = 345
+    fecha = "2018-12-09"
+    descripcion = "yuscgbuyer"
+    
+    with pytest.raises(ValueError) as excinfo:
+        main.crear_orden_compra(pytest.dbconn, vendedores_id, cliente_id, valor, fecha, descripcion)
+    assert "no son coincidentes" in str(excinfo.value)
+
+@pytest.mark.usefixtures("conn_fixture")
+def test_crear_orden_compra_correcta():
+    vendedores_id = 4
+    cliente_id = 4
+    valor = 345
+    fecha = "2018-12-09"
+    descripcion = "yuscgbuyer"
+    
+    main.crear_orden_compra(pytest.dbconn, vendedores_id, cliente_id, valor, fecha, descripcion)
+
+@pytest.mark.usefixtures("conn_fixture")   
+def test_dar_alta_vendedor():
+    main.dar_alta_vendedor(pytest.dbconn, "Carlos", "construccion", 34, 5763871)
