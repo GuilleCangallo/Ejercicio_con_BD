@@ -98,6 +98,46 @@ def dar_alta_vendedor(conn, nombre, sector, comision, telefono):
     conn.commit()
     cursor.close()
 
+def dar_alta_cliente(conn, nombre, ciudad, sector_cliente, telefono, email, id_vendedor):
+    cursor = conn.cursor(dictionary=True)
+    
+    consulta_vendedor = f"SELECT vendedores.sector FROM ventas.vendedores WHERE vendedores.id = {id_vendedor}"
+    cursor.execute(consulta_vendedor)
+    sector_vendedor = cursor.fetchone()
+    if sector_cliente != sector_vendedor['sector']:
+        raise ValueError("Error, el sector del cliente no es igual al del vendedor.")
+    
+    cursor.execute(f'''
+        INSERT INTO clientes (nombre, ciudad, sector, telefono, email, id_vendedor)
+        VALUES ("{nombre}", "{ciudad}", "{sector_cliente}", {telefono}, "{email}", {id_vendedor})
+    ''')
+    conn.commit()
+    cursor.close()
+    
+def eliminar_orden_de_compra(conn, id):
+    cursor = conn.cursor()
+    cursor.execute(f'''
+        DELETE FROM ventas.ordenes WHERE (id = {id})
+    ''')
+    conn.commit()
+    cursor.close()
+    
+def dar_baja_vendedor(conn, id):
+    cursor = conn.cursor()
+    cursor.execute(f'''
+        DELETE FROM ventas.vendedores WHERE (id = {id})
+    ''')
+    conn.commit()
+    cursor.close()
+
+def dar_baja_cliente(conn, id):
+    cursor = conn.cursor()
+    cursor.execute(f'''
+        DELETE FROM ventas.clientes WHERE (id = {id})
+    ''')
+    conn.commit()
+    cursor.close()
+
 if __name__ == "__main__":
     dbconn = abrir_conexion()
     dbconn.close()
